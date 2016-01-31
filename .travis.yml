@@ -8,6 +8,11 @@ env:
   DOCKER_COMPOSE_VERSION: 1.5.0
 services:
 - docker
+
+before_install:
+- docker build -t georgebatalinski/docker-centos-simple-server:latest .
+
+
 deploy:
   provider: elasticbeanstalk
   access_key_id: AKIAJ6FTIIMUUT5H73NQ
