@@ -1,0 +1,21 @@
+sudo: required
+language: node_js
+node_js:
+- '4.1'
+git:
+  depth: 1
+env:
+  DOCKER_COMPOSE_VERSION: 1.5.0
+services:
+- docker
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: AKIAJ6FTIIMUUT5H73NQ
+  secret_access_key:
+    secure: rneuLUMaf1nWZm9IrhDa1z0FpEVYFX0NhTuztHiBOutG4G0BHWpRQgJ0AGm7MS8Yh+tEO5NCtdzrgndze0GJE1gWzircCbjxqc/kOWmZL4Lr3A/QkTKGtz5fJTH6n7jqWCxTREEPD0RPm3jZjlnVitcSUwVDwBEqXNX+zhbHaklz5/N0tLolHznEyzqWCBPWhSQqI9W1ACvN9IGLlJBE2wFI38TRQDjrpOO42HqclesPPQwRIH9l3SV5/ssD+jNfLvDsPCzWeq4EYqqwan+nM3R+rF6C1CyaYvAABW/3c/7wDUWfcpiL/q/rH4IaG2krK+INXm9zgY1pjCP8IISFJk7pttP98FMK/PAgfrjcddL5c920VgmueCM1g89ltOsVgzOtH/0C37YXgJoKC3mkDCGdItz0suG/Rz7vLcqXJeUsiZoIyqRU7VWIWspdiK4FAGEydf6a9Y9aZ6We7IZEz906R8z7dJO2qoLYgXkTGjHqUcC31/O6NLsTMB4IH7oi/P11goBFlrg06fbFKY8wv2MnZOTubvsGebaVs+nyd+N/NZaGZnWpMT7NNGqjJn5cOZUlVnjN0YhwXUXh9tIvYY2LmN0yf6FfXQLVSdd3I6fYzkpjBLOJ4Yuv1FXF3XyuIXkpiMiAZTtp6vy6iCV4a9MHwqn0ck+UzJp+i5Gz54Q=
+  region: us-east-1
+  app: tennis-rocks
+  bucket_name: elasticbeanstalk-us-east-1-362999620065
+  env: 'tennis-rocksEnv'
+  on:
+    repo: georgebatalinski/newrepo
