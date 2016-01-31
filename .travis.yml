@@ -16,6 +16,6 @@ deploy:
   region: us-east-1
   app: tennis-rocks
   bucket_name: elasticbeanstalk-us-east-1-362999620065
-  env: 'tennis-rocksEnv'
+  env: 'tennisRocks-env'
   on:
     repo: georgebatalinski/newrepo
