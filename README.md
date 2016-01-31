@@ -5,13 +5,13 @@ You want to be a baller and run your infrastructure with only one button click? 
 You want to have some fun setting up AWS? CHECK 
 
 #Toolset - Commands (that will save your ass)   
-    Here is the list of tools that will come in critical in troubleshooting - becuase we know 
-    that its not all peachy. This setup should be pretty straightforward, as long as all the pieces cooporate 
-    Docker, AWS, Travis, Node ...
+Here is the list of tools that will come in critical in troubleshooting - becuase we know that its not all peachy.
+This setup should be pretty straightforward, as long as all the pieces cooporate Docker, AWS, Travis, Node ...
     
 | Command/Location | Description |
 | --- | --- |
 | cat /ect/hosts  | Check the hosts on the VM  |
+| docker inspect <containerName> | Check important info about container  |
 | eb local run  | Run your app locally on boot2docker VM, before testing it on AWS |
 | eb local status  | Shows containers IP and address and the open ports |
 | eb local open  | Opens the application in a web browser and exits |
@@ -19,15 +19,16 @@ You want to have some fun setting up AWS? CHECK
 
 
 ## Navigating AWS API Documentation 
-    It can be painful to use the API at times, I would recommend getting familiarized with the categories, 
-    as these will help you narrow down your search criteria, when you are looking for specific information
+It can be painful to use the API at times, I would recommend getting familiarized with the categories, as 
+these will help you narrow down your search criteria, when you are looking for specific information.
+    
 | Command/Location | Description |
 | --- | --- |
 | Task Definition | This is your Dockerrun.aws.json v2 (reference is below) - file that setups up tasks required for AWS to setup your instances |
 | EB | cli that commnicates with Elastic bean - and helps you setup an envrionment via Commands line | 
     
-Btw, this is unrelated with the demo - but this logo is awsome :)
-![Awesome Docker machine image](https://github.com/docker/machine) 
+Btw, this is unrelated with the demo - but logo from Docker Machine  :)
+![Awesome Docker machine image](https://github.com/docker/machine/blob/master/docs/img/logo.png) 
 
 
 ## GIT -> ElasticBeanStalk 
@@ -160,7 +161,8 @@ This needs to be defined at the top - Reasons:
       
 To understand that is happening:
    At the top of the page -  "volumes" - defines volumes that should be created 
-    it is where you create the volumes 
+    it is where you create the volumes. VOLUMES are created and will persist data, even if you deleted the container
+    iteself, the volumes are independent of container lifecycle.
     
    Inside the "containerDefinitions": 
      it is where  - are only allowed to mount - "volumes" - that were created above 
