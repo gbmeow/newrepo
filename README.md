@@ -1,3 +1,144 @@
+# Main Tutorial 
+
+You want to create a multi-container application on deploy it on AWS? CHECK 
+You want to be a baller and run your infrastructure with only one button click? CHECK 
+You want to have some fun setting up AWS? CHECK 
+
+## GIT -> ElasticBeanStalk 
+
+### Dockerrun.aws.json v2 - CHECKMARK
+    Configuration file for Multicontainer docker 
+    NOTE: v2 - is for multi-container (more then 1) - otherwise you can use the v1 - definiton 
+    [Reference](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker_v2config.html#create_deploy_docker_v2config_dockerrun)
+
+Generate your run json (You can also use the AWS wizard - at https://console.aws.amazon.com/elasticbeanstalk)
+
+Here is the sample
+```
+<INSERT REAL FILE CONTENT>
+
+```
+
+TO NOTE
+
+```
+    "volumes": [
+    {
+      "name": "db",
+      "host": {
+        "sourcePath": "/src"
+      }
+    }
+  ],
+  
+This needs to be defined at the top - Reasons: 
+    EB will setup this as a volume - so you can share this between instances/containers 
+    This volume will be independently mounted inside each container 
+    Each container will specify its mount point 
+     "mountPoints": [
+        {
+          "sourceVolume": "db",
+          "containerPath": "/src/money"
+        }
+      ],
+      
+Think about it this way 
+    "volumes" - defines volumes that should be created 
+    containers - are only allowed to mount - "volumes" - that were created inside "volumes"
+    <ACTION - EASIER Explanation>
+
+```
+
+[Persisting data across volumens](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_data_volumes.html)
+
+
+
+### Navigating their API 
+    It can be painful to use the API at times, I would recommend getting familiarized with the categories, 
+    as these will help you narrow down your search criteria, when you are looking for specific information
+        Task Definition 
+        EB 
+        AWS CLI 
+
+
+### Test local - via EB - CHECKMARK
+
+Check your version of EB 
+NOTE: To install on Install the EB CLI on OS X 10.7 or later
+
+```
+$osxterm: curl -s https://s3.amazonaws.com/elasticbeanstalk-cli-resources/install-ebcli.py | python
+```
+IF: you are not running OSX or have diffrent version 
+[Install EB CLI](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html)
+
+```
+Jerzys-MacBook-Air:newrepo jerzybatalinski$ eb --version
+EB CLI 3.7.3 (Python 2.7.1)
+
+```
+
+
+Requirements:
+    Create your project direcotry - as a Git repository
+
+Init your EB 
+```
+$osxterm: eb init
+Follow these steps [Steps here](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-configuration.html)
+```
+
+#### Eb local 
+If you have your Dockerrun.aws.json v2
+and your images are public/or private 
+you can run this command 
+
+```
+$osxterm: eb local run 
+
+```
+
+In another tab (or if you know the IP to the VM - go directly to the webbrowser)
+
+```
+$osxterm: eb local open
+
+```
+
+Once this is running locally, you have a high chance that it will run on Elastic Bean Stalk - however, that is not guaranteed,
+but if you can open you app - that is a good indication that it will run. 
+
+##### TROUBLESHOOTING: If you cannot open the app 
+
+```
+$osxterm: eb local status 
+
+%: ....
+Container name: elasticbeanstalk_server_1
+Container ip: 192.168.59.103
+Container running: False
+Exposed host port(s): None
+Full local URL(s): None
+...
+
+```
+If Exposed host port(s): 80 OR Full local URL(s): 192.168.59.103:80 are not available - you containers are not running 
+
+EB LOCAL is using boot2docker - to provide you the application without provisioning any AWS reources 
+So you could troubleshoot it - by ssh into the boot2docker machine (while the continer is running) 
+
+```
+$osxterm: boot2docker ssh
+```
+
+
+## GIT -> Travis -> ElasticBeanStalk  
+
+
+
+
+
+
 ## Tutorial 
     Use load balancing - PORT: 80 
 
@@ -43,9 +184,6 @@ If you have Tasks: [] - that means you have no containers running
 
 SSH into the remote - using your DNS (do  not forget sudo)
 
-
-LOCAL 
-    ???
 
 ```
 
