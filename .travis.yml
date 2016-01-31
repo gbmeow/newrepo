@@ -10,6 +10,7 @@ services:
 - docker
 
 before_install:
+- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - docker build -t georgebatalinski/docker-centos-simple-server .
 - docker push georgebatalinski/docker-centos-simple-server:latest
 

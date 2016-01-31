@@ -156,7 +156,12 @@ $osxterm: boot2docker ssh
 ## GIT -> Travis -> ElasticBeanStalk  
 
 
-
+Jerzys-MacBook-Air:newrepo jerzybatalinski$ travis env set DOCKER_EMAIL george.batalinski@gmail.com
+[+] setting environment variable $DOCKER_EMAIL
+Jerzys-MacBook-Air:newrepo jerzybatalinski$ travis env set DOCKER_USERNAME georgebatalinski
+[+] setting environment variable $DOCKER_USERNAME
+Jerzys-MacBook-Air:newrepo jerzybatalinski$ travis env set DOCKER_PASSWORD jmalibu6969
+[+] setting environment variable $DOCKER_PASSWORD
 
 
 
