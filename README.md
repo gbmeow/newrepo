@@ -4,7 +4,27 @@ You want to create a multi-container application on deploy it on AWS? CHECK
 You want to be a baller and run your infrastructure with only one button click? CHECK 
 You want to have some fun setting up AWS? CHECK 
 
+#Toolset 
+    Here is the list of tools that will come in critical in troubleshooting - becuase we know 
+    that its not all peachy. This setup should be pretty straightforward, as long as all the pieces cooporate 
+    Docker, AWS, Travis, Node ...
+    
+| Command/Location | Description |
+| --- | --- |
+| cat /ect/hosts  | Check the hosts on the VM  |
+| eb local run  | Run your app locally on boot2docker VM, before testing it on AWS |
+| eb local status  | Shows containers IP and address and the open ports |
+| eb local open  | Opens the application in a web browser and exits |
+| curl http://localhost:51678/v1/tasks  | Not on your local machine, but when you are inside AWS and - see ### Inspect tasks under  "/ecs-agent", |
+
+    
+Btw, this is unrelated with the demo - but this logo is awsome :)
+![Awesome Docker machine image](https://github.com/docker/machine) 
+
 ## GIT -> ElasticBeanStalk 
+
+First thing to note, that if you are going to use use load balancer - which you will get by default 
+    you must configure your Dockerrun.aws.json to - PORT: 80 
 
 ### Dockerrun.aws.json v2 - CHECKMARK
     Configuration file for Multicontainer docker 
@@ -16,6 +36,7 @@ Generate your run json (You can also use the AWS wizard - at https://console.aws
 Here is the sample
 ```
 <INSERT REAL FILE CONTENT>
+ //you must configure your Dockerrun.aws.json to - PORT: 80 
 
 ```
 
@@ -53,7 +74,7 @@ Think about it this way
 
 
 
-### Navigating their API 
+### Navigating their API Documentation 
     It can be painful to use the API at times, I would recommend getting familiarized with the categories, 
     as these will help you narrow down your search criteria, when you are looking for specific information
         Task Definition 
@@ -139,8 +160,8 @@ $osxterm: boot2docker ssh
 
 
 
-## Tutorial 
-    Use load balancing - PORT: 80 
+
+
 
 
 ##Test you EB CLI if you are testing you app locally 
@@ -169,6 +190,7 @@ version   Show the Docker version information
 
 ```
 
+
 ### Inspect tasks under  "/ecs-agent",
 
 ```
@@ -182,12 +204,10 @@ If you have Tasks: [] - that means you have no containers running
 
 ```
 
-SSH into the remote - using your DNS (do  not forget sudo)
+SSH into the remote - using your DNS (do not forget sudo)
 
 
 ```
-
-
 [ec2-user@ip-172-31-30-105 ~]$ curl http://localhost:51678/v1/tasks
 {"Tasks":[{"Arn":"arn:aws:ecs:us-east-1:362999620065:task/bf2d131c-9810-41bb-9edb-7569d19f3e35",
 "DesiredStatus":"RUNNING","KnownStatus":"RUNNING","Family":"awseb-dev-env-7n2n5sxhpm","Version":"1",
@@ -195,24 +215,5 @@ SSH into the remote - using your DNS (do  not forget sudo)
 "DockerName":"ecs-awseb-dev-env-7n2n5sxhpm-1-db-888ad2c1e6bed5c23c00","Name":"db"},
 {"DockerId":"72401d9988ab0b981136ecce83e1fff5bcb97cf06d0f68c8b0c6cd719b0d83bc",
 "DockerName":"ecs-awseb-dev-env-7n2n5sxhpm-1-server-f2d6f68ac2bbd1c78e01","Name":"server"}]}]}[ec2-user@ip-172-31-30-105 ~]$ 
-
-
-### EB 
-Run your app locally, before testing it on AWS
-
-```
-run -- runs local 
-status --- look for containers and the open ports
-open -- see if you can open 
-
-
 ```
 
-### Check the hosts on the VM 
-```
-/ect/hosts - you should see the connected containers here 
-```
-
-
-### Awesome Docker machine image    
-https://github.com/docker/machine
