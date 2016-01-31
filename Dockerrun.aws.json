@@ -11,7 +11,7 @@
   "containerDefinitions": [
     {
       "name": "server",
-      "image": "georgebatalinski/docker-centos-simple-server:latest",
+      "image": "georgebatalinski/docker-centos-simple-server-two:latest",
       "essential": true,
       "memory": 128,
       "portMappings": [

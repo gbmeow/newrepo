@@ -4,7 +4,7 @@ You want to create a multi-container application on deploy it on AWS? CHECK
 You want to be a baller and run your infrastructure with only one button click? CHECK 
 You want to have some fun setting up AWS? CHECK 
 
-#Toolset 
+#Toolset - Commands (that will save your ass)   
     Here is the list of tools that will come in critical in troubleshooting - becuase we know 
     that its not all peachy. This setup should be pretty straightforward, as long as all the pieces cooporate 
     Docker, AWS, Travis, Node ...
@@ -17,16 +17,40 @@ You want to have some fun setting up AWS? CHECK
 | eb local open  | Opens the application in a web browser and exits |
 | curl http://localhost:51678/v1/tasks  | Not on your local machine, but when you are inside AWS and - see ### Inspect tasks under  "/ecs-agent", |
 
+
+## Navigating AWS API Documentation 
+    It can be painful to use the API at times, I would recommend getting familiarized with the categories, 
+    as these will help you narrow down your search criteria, when you are looking for specific information
+| Command/Location | Description |
+| --- | --- |
+| Task Definition | This is your Dockerrun.aws.json v2 (reference is below) - file that setups up tasks required for AWS to setup your instances |
+| EB | cli that commnicates with Elastic bean - and helps you setup an envrionment via Commands line | 
     
 Btw, this is unrelated with the demo - but this logo is awsome :)
 ![Awesome Docker machine image](https://github.com/docker/machine) 
 
 ## GIT -> ElasticBeanStalk 
 
-First thing to note, that if you are going to use use load balancer - which you will get by default 
+1. First thing to note, that if you are going to use use load balancer - which you will get by default 
     you must configure your Dockerrun.aws.json to - PORT: 80 
+2. We will be using the Command line - so you can achieve all this (using the WEB CONSOLE) 
+   [WEB CONSOLE](https://console.aws.amazon.com/elasticbeanstalk)
+    All you will have to do - is 
+        Create a New Application 
+        Follow the Wizard
+        and UPLOAD (Dockerrun.aws.json v2) - so still do step 2 with us (and feel free to skip other steps)
 
-### Dockerrun.aws.json v2 - CHECKMARK
+Setup your directory and create the environment in which your application will live 
+```
+$ mkdir HelloWorld
+$ cd HelloWorld
+$ eb init -p PHP
+$ echo "Hello World" > index.html
+$ eb create dev-env
+$ eb open
+```
+
+### []Dockerrun.aws.json v2 - CHECKMARK
     Configuration file for Multicontainer docker 
     NOTE: v2 - is for multi-container (more then 1) - otherwise you can use the v1 - definiton 
     [Reference](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker_v2config.html#create_deploy_docker_v2config_dockerrun)
@@ -70,16 +94,11 @@ Think about it this way
 
 ```
 
-[Persisting data across volumens](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_data_volumes.html)
+[Persisting data across volumes](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_data_volumes.html)
 
 
 
-### Navigating their API Documentation 
-    It can be painful to use the API at times, I would recommend getting familiarized with the categories, 
-    as these will help you narrow down your search criteria, when you are looking for specific information
-        Task Definition 
-        EB 
-        AWS CLI 
+
 
 
 ### Test local - via EB - CHECKMARK
