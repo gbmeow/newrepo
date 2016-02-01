@@ -26,6 +26,30 @@ Btw, this is unrelated with the demo - but logo from Docker Machine is Awsome :)
 ![Awesome Docker machine image](https://github.com/docker/machine/blob/master/docs/img/logo.png) 
 
 
+### Before it begins
+
+I'll be referring to commands executed in your own terminal with:
+
+```
+    $osxterm: command
+```
+
+Commands inside a container with:
+```
+    $ root: command
+```
+
+Output after running a command will be denoted (in container/or your terminal)
+```
+    %: output 
+```
+
+Output after running a command inside Mongo Shell 
+```
+    > output 
+```
+
+
 ## STEP0 --- FROM git TO Elastic Beanstalk in 5 minutes
 In the first part of this tutorial, we will begin by setting a sample application, and deploying it to AWS via 
 Elastic Beanstalk. After we are done with STEP0, we will add Travis. Travis will be a piece of cake, so STEP0 is the 
