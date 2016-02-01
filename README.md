@@ -1,67 +1,65 @@
 # Main Tutorial 
 
 We are gathered here today, because we want to have multiple containers running on Amazon Web Services (AWS) and Elastic Beanstalk.
-Reason for using Elastic Beanstalk, is beacuse it integrates with Travis - and we want our automatic builds and deploys.
+Reason for using Elastic Beanstalk, it is the only experimental way to move code from local machine to Travis via Docker.
 
 I wanted to share some common tools (really just commands) that will help us troubleshoot - when (NOT if) we 
-find ourselves in hot water. These are good to know, as they will help you extract some information about 
-your containers and give you ways to try to troubleshoot. 
+find ourselves in hot water. These commands are good to know, as they will help you extract some information about 
+your containers and give you ways to troubleshoot. 
 
 #Toolset - Commands   
-Here is the list of tools that will come in critical in troubleshooting. The tutorial we are about to do, deploys a 
-simple Node server app, however these will come useuful when you are trying to standup your apps :) 
+You do not have to memorize them, although I am sure you will, just know that they are here for you if you need them.
+The tutorial we are about to do, deploys a simple Node server app, 
+however these will come useuful when you are trying to standup your apps :) 
     
 | Command/Location | Description |
 | --- | --- |
-| cat /ect/hosts  | Check the hosts on the VM  |
+| cat /ect/hosts  | Not docker specific - this is a file with hosts table  |
 | docker inspect <container Name|| ID> | JSON data about your container  |
 | eb local run  | Run your app locally on boot2docker VM, before testing it on AWS |
 | eb local status  | Shows containers IP and address and the open ports |
 | eb local open  | Opens the application in a web browser and exits |
 | curl http://localhost:51678/v1/tasks  | Not on your local machine, but when you are inside AWS and - see ### Inspect tasks under  "/ecs-agent", |
-
-
-## Navigating AWS API Documentation 
-It maybe difficult to find certain references inside the API documentation at times, I would recommend becoming familiar with the following terms, as 
-these will help you narrow down your search criteria, when you are looking for specific information.
-    
-| Command/Location | Description |
-| --- | --- |
 | Task Definition | This is your Dockerrun.aws.json v2 (reference is below) - file that setups up tasks required for AWS to setup your instances |
-| EB | cli that commnicates with Elastic Beanstalk - and helps you setup an envrionment via Commands line | 
-    
+
 Btw, this is unrelated with the demo - but logo from Docker Machine is Awsome :)
 ![Awesome Docker machine image](https://github.com/docker/machine/blob/master/docs/img/logo.png) 
 
 
 ## STEP0 --- FROM git TO Elastic Beanstalk in 5 minutes
 In the first part of this tutorial, we will begin by setting a sample application, and deploying it to AWS via 
-Elastic Beanstalk. After we are done with STEP0, we will add travis. 
+Elastic Beanstalk. After we are done with STEP0, we will add Travis. Travis will be a piece of cake, so STEP0 is the 
+majority of the work. (all the hard work into setup and then the payoff) 
 
-### Clone our example repo to your local machine 
+
+### Fork this repo to follow along -  our example repo to your local machine 
+
+[] Fork https://github.com/georgebatalinski/newrepo.git
+[] Delete .travis.yml && Dockerrun.aws.json
 
 ```
 git clone https://github.com/georgebatalinski/newrepo.git
 ```
         
-1. We will be using the Command line in this Tutorial, however you can easily achive all of this - via [WEB CONSOLE](https://console.aws.amazon.com/elasticbeanstalk)
+1. We will be using the Command line in this Tutorial, however you can easily achive all of this - 
+via [WEB CONSOLE](https://console.aws.amazon.com/elasticbeanstalk)
 
-All you will have to do:
-    1. [Login](https://console.aws.amazon.com/elasticbeanstalk/?region=us-east-1#/applications)
-    2. Upper right hand corner - [Create New Application]
-        1. Follow the steps that are provided by Amazon 
+IF you decied to use [WEB CONSOLE] do the following (otherwise - skip to point 2):
+    I. [Login](https://console.aws.amazon.com/elasticbeanstalk/?region=us-east-1#/applications)
+    II. Upper right hand corner - [Create New Application]
+        I. Follow the steps that are provided by Amazon 
         NOTE: New Environment: 'Create web server' 
-        2. When it asks UPLOAD - click on 'Upload' button - and select only your Dockerrun.aws.json 
+        II. When it asks UPLOAD - click on 'Upload' button - and select only your Dockerrun.aws.json 
             If you decided to go via WEB CONSOLE
                 skip to ### []Dockerrun.aws.json v2
 
 2. We will need to setup permissions, in order to allow Elastic Beanstalk to create/manage our instances.
-Since AWS uses multiple services to assemble Docker for us, Elastic Beanstalk will need to speak to Amazon ECS container agent, and you we need 
-to have the corresponding permissions in IAM. 
+Since AWS uses multiple services to assemble Docker for us, Elastic Beanstalk will need to speak to Amazon ECS container agent, 
+and you will have to add the Policy in AWS Identity and Access Management (IAM). 
 
 Lucky for us, it is simple to do:
     
-    1. Paste this into the Policy area in IAM
+    I. Paste this into the Policy area in IAM
     ```
     {
     "Version": "2016-02-01",
@@ -89,17 +87,21 @@ Lucky for us, it is simple to do:
     }
     ```
 
-    2. Create the Role
+    II. Create the Role
         and attach the above Policy to it 
     
 
-If you are new to how to create and add policies 
+Here is a good tutorial on exactly how to do it -> 
 [Click here for step by step guide](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker_ecstutorial.html#create_deploy_docker_ecstutorial_role)
   
 
 
    
 3. cd into our cloned directory above - and create the environment inside Elastic Beanstalk - eb will do the talking
+
+Roadmap check:
+[] Cloned the repo
+[] Added Role/Policy
 
 ```
 $ cd rate-instructor 
@@ -108,8 +110,7 @@ $ eb create dev-env
 ```
 
 You got it - maybe it took a bit longer over our allocated time of 5 minutes -- but it was not our fault, it was 
-all Elastic Beanstalk provisioning the 'dev-env' (it takes time to spin the environment - aren't you glad we did not have 
-to do this manually)
+all Elastic Beanstalk provisioning the 'dev-env' (it can take up to 12 minutes (approx) - to spin the environment)
 
 
 ### [] Create a file - Dockerrun.aws.json (NOTE: v2 - is for multi-container (more then 1 container)) 
@@ -119,7 +120,7 @@ whenever an instance is added.
 [Reference](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker_v2config.html#create_deploy_docker_v2config_dockerrun)
 
 
-1. Into your newly created - Dockerrun.aws.json -  copy/paste the below JSON 
+1. Create a file named [Dockerrun.aws.json] -  in your git repo - copy/paste the below JSON 
 
 Dockerrun.aws.json
 ```
@@ -190,11 +191,11 @@ The biggies:
     }
   ],
 ```
-Elastic Beanstalk will setup create an empty volume 
-and we get benefit for free: 
-    1. We can share the volume between containers 
-    2. This volume will be independently mounted inside each container 
-    4. This volume will persist, even when our containers become stopped - helpful for backup
+Elastic Beanstalk will create an empty volume 
+and we get the following benefits: 
+    I. We can share the volume between containers 
+    II. This volume will be independently be mounted inside each container 
+    III. This volume will persist, even when our containers become stopped - helpful for backup
         making volumes independent of container lifecycle.    
    
 
@@ -217,6 +218,11 @@ NOTE: If you cannot set this up, or require non-default port (meaning are unhapp
    
 
 ### []Test you EB CLI if you are testing you app locally 
+
+Roadmap check:
+[] Cloned the repo
+[] Added Role/Policy
+[] There is a file named - Dockerrun.aws.json - in your main repo 
 
 If you do not have latest eb cli - then upgrade. REASON: I ran into some configuration issues, beacuse of 
 and older version. Do not burn the hours, just update.
@@ -276,6 +282,12 @@ If not, submit your issue in the Comments
 
 ## STEP1 --- FROM git TO Elastic Beanstalk TO travis in 5 minutes 
 
+Roadmap check:
+[] Cloned the repo
+[] Added Role/Policy
+[] There is a file named - Dockerrun.aws.json - in your main repo 
+[] You got to open and see 'Hello World' in your browser - if not - go to above section and find out why? before proceeding
+
 The missing piece is Travis right now, so lets set it up.
 
 The travis layer is next, our expectation (or where Travis is going to help us):     
@@ -286,8 +298,7 @@ The travis layer is next, our expectation (or where Travis is going to help us):
     
 ### The Setup 
 Sign up for a Travis account - 
-Once you synced your account on https://travis-ci.org/ with your Git repo, the rest is
-2 simple steps away 
+Once you synced your account on https://travis-ci.org/ with your Git repo, the rest is 2 simple steps away  
 
 
 1. We Create a file  .travis.yml in our local repo
